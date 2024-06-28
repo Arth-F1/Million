@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Overview</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 40%;
+            margin: auto;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2> <a href="{{url_for('home')}}" style="text-decoration: none;color: white;"> Menu</a></h2>
+        <ul>
+            <li><a href="{{ url_for('sales') }}">Sales</a></li>
+            <li><a href="{{ url_for('expense') }}">Expense</a></li>
+            <li><a href="{{ url_for('profit') }}">Profits</a></li>
+            <li><a href="{{ url_for('employees') }}">Employees</a></li>
+            <li><a href="{{ url_for('customers') }}">Customers</a></li>
+            <li id="use">User: {{ username }}</li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    <h1>Profit Overview</h1>
+
+    <div class="chart-container">
+        <canvas id="dailySalesExpenseProfit"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="monthlySales"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="monthlyExpenses"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="monthlyProfits"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="expenseProfitSalesRatio"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const dailyChartData = JSON.parse('{{ daily_chart_data | tojson | safe }}');
+            const monthlyChartData = JSON.parse('{{ monthly_chart_data | tojson | safe }}');
+
+
+            const ctxDaily = document.getElementById('dailySalesExpenseProfit').getContext('2d');
+            const dailyChart = new Chart(ctxDaily, {
+                type: 'line',
+                data: {
+                    labels: dailyChartData.labels,
+                    datasets: [{
+                        label: 'Sales',
+                        data: dailyChartData.sales,
+                        borderColor: 'rgb(75, 192, 81)',
+                        borderWidth: 1,
+                        fill: false
+                    }, {
+                        label: 'Expenses',
+                        data: dailyChartData.expenses,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }, {
+                        label: 'Profits',
+                        data: dailyChartData.profits,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Daily Sales, Expenses, and Profits'
+                    }
+                }
+            });
+
+            const ctxMonthlySales = document.getElementById('monthlySales').getContext('2d');
+            const monthlySalesChart = new Chart(ctxMonthlySales, {
+                type: 'bar',
+                data: {
+                    labels: monthlyChartData.labels,
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: monthlyChartData.sales,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Monthly Sales'
+                    }
+                }
+            });
+
+            const ctxExpenseProfitSalesRatio = document.getElementById('expenseProfitSalesRatio').getContext('2d');
+            const totalSales = monthlyChartData.sales.reduce((a, b) => a + b, 0);
+            const totalExpenses = monthlyChartData.expenses.reduce((a, b) => a + b, 0);
+            const totalProfits = monthlyChartData.profits.reduce((a, b) => a + b, 0);
+            const ratioChart = new Chart(ctxExpenseProfitSalesRatio, {
+                type: 'pie',
+                data: {
+                    labels: ['Sales', 'Expenses', 'Profits'],
+                    datasets: [{
+                        data: [totalSales, totalExpenses, totalProfits],
+                        backgroundColor: [
+                            'rgb(75, 192, 81)',
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Monthly Expense, Profit, and Sales Ratio'
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

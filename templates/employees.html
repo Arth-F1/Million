@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Svadishtam Management - Employees</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2> <a href="{{url_for('home')}}" style="text-decoration: none;color: white;"> Menu</a></h2>
+        <ul>
+            <li><a href="{{ url_for('sales') }}">Sales</a></li>
+            <li><a href="{{ url_for('expense') }}">Expense</a></li>
+            <li><a href="{{ url_for('profit') }}">Profits</a></li>
+            <li><a href="{{ url_for('employees') }}">Employees</a></li>
+            <li><a href="{{ url_for('customers') }}">Customers</a></li>
+            <li id="use">User: {{ username }}</li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    <div>
+        <button type="button" class="btn btn-success add-btn" style="margin-left: 90%; margin-top: 40px; margin-bottom: 40px;" data-bs-toggle="modal" data-bs-target="#addModal">Add Employee</button>
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addForm" action="/add_employee" method="post">
+                            <label for="name">Name:</label>
+                            <input type="text" id="addname" name="name"><br><br>
+                            <label for="designation">Designation:</label>
+                            <input type="text" id="adddesignation" name="designation"><br><br>
+                            <label for="aadhar">Aadhar:</label>
+                            <input type="text" id="addaadhar" name="aadhar"><br><br>
+                            <label for="salary">Salary:</label>
+                            <input type="text" id="addsalary" name="salary"><br><br>
+                            <label for="email">Email:</label>
+                            <input type="email" id="addemail" name="email"><br><br>
+                            <label for="adddob">D.O.B.:</label>
+                            <input type="date" id="adddob" name="dob"><br><br>
+                            <label for="adddoj">DOJ:</label>
+                            <input type="date" id="adddoj" name="doj"><br><br>
+                            <label for="addmobile">Mobile:</label>
+                            <input type="text" id="addmobile" name="mobile"><br><br>
+                            <button type="submit" id="addbut" class="btn btn-primary">Add Employee</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="emptab" class="emp">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Aadhar</th>
+                    <th>Salary</th>
+                    <th>Email</th>
+                    <th>D.O.B.</th>
+                    <th>D.O.J.</th>
+                    <th>Mobile</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
+                    <td>{{ row[7] }}</td>
+                    <td>{{ row[8] }}</td>
+                    <td><button type="button" class="btn btn-primary edit-btn" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" method="post" action="/edit_employee">
+                        <input type="hidden" id="employee_id" name="employee_id">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name"><br><br>
+                        <label for="designation">Designation:</label>
+                        <input type="text" id="designation" name="designation"><br><br>
+                        <label for="aadhar">Aadhar:</label>
+                        <input type="text" id="aadhar" name="aadhar"><br><br>
+                        <label for="salary">Salary:</label>
+                        <input type="text" id="salary" name="salary"><br><br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email"><br><br>
+                        <label for="dob">D.O.B.:</label>
+                        <input type="date" id="dob" name="dob"><br><br>
+                        <label for="doj">DOJ:</label>
+                        <input type="date" id="doj" name="doj"><br><br>
+                        <label for="mobile">Mobile:</label>
+                        <input type="text" id="mobile" name="mobile"><br><br>
+                        <button type="submit" id="save" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var editModal = document.getElementById('editModal');
+        var editForm = document.getElementById('editForm');
+        var editBtns = document.getElementsByClassName('edit-btn');
+    
+        for (var i = 0; i < editBtns.length; i++) {
+            editBtns[i].addEventListener('click', function(event) {
+                var button = event.target;
+                var row = button.closest('tr');
+                var employeeId = row.cells[0].innerText;
+    
+                document.getElementById('employee_id').value = employeeId;
+                document.getElementById('name').value = row.cells[1].innerText;
+                document.getElementById('designation').value = row.cells[2].innerText;
+                document.getElementById('aadhar').value = row.cells[3].innerText;
+                document.getElementById('salary').value = row.cells[4].innerText;
+                document.getElementById('email').value = row.cells[5].innerText;
+                document.getElementById('dob').value = row.cells[6].innerText;
+                document.getElementById('doj').value = row.cells[7].innerText;
+                document.getElementById('mobile').value = row.cells[8].innerText;
+    
+                var bootstrapModal = new bootstrap.Modal(editModal);
+                bootstrapModal.show();
+            });
+        }
+    
+        // Handle modal close event
+        editModal.addEventListener('hidden.bs.modal', function () {
+            // Remove the modal backdrop manually
+            document.body.classList.remove('modal-open');
+            var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+            for (var i = 0; i < modalBackdrops.length; i++) {
+                modalBackdrops[i].parentNode.removeChild(modalBackdrops[i]);
+            }
+        });
+    </script>
+    
+</body>
+
+</html>

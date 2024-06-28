@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>expense</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <h1>Svadishtam Management</h1>
+    <div class="sidebar">
+        <h2> <a href="{{url_for('home')}}" style="text-decoration: none;color: white;"> Menu</a></h2>
+        <ul>
+            <li><a href="{{ url_for('sales') }}">Sales</a></li>
+            <li><a href="{{ url_for('expense') }}">Expense</a></li>
+            <li><a href="{{ url_for('profit') }}">Profits</a></li>
+            <li><a href="{{ url_for('employees') }}">Employees</a></li>
+            <li><a href="{{ url_for('customers') }}">Customers</a></li>
+            <li id="use">User: {{ username }}</li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="form-container" style="width: 500px;margin: auto; margin-bottom: 100px;">
+        <form action="/submit2" method="post">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date2">
+            <label for="dry_items">Dry Items expense:</label>
+            <input type="text" id="dry_items" name="dry_items" required><br>
+
+            <label for="di">Dry Items Bought:</label>
+            <textarea id="di" name="di" required></textarea><br>
+
+            <label for="green_groceries">Green Groceries expense:</label>
+            <input type="text" id="green_groceries" name="green_groceries" required><br>
+
+            <label for="gi">Green Groceries Bought:</label>
+            <textarea id="gi" name="gi" required></textarea><br>
+
+            <label for="fuel">Fuel expense:</label>
+            <input type="text" id="fuel" name="fuel" required><br>
+
+            <label for="fu">Fuel Bought:</label>
+            <textarea id="fu" name="fu" required></textarea><br>
+
+            <label for="staff_convenience">Staff Convenience expense:</label>
+            <input type="text" id="staff_convenience" name="staff_convenience" required><br>
+
+            <label for="sc">List of staff convenience Bought:</label>
+            <textarea id="sc" name="sc" required></textarea><br>
+
+            <label for="beverages">Beverages expense:</label>
+            <input type="text" id="beverages" name="beverages" required><br>
+
+            <label for="bever">Beverages Bought:</label>
+            <textarea id="bever" name="bever" required></textarea><br>
+
+            <label for="packaging">Packaging expense:</label>
+            <input type="text" id="packaging" name="packaging" required><br>
+
+            <label for="pack">Packaging Bought:</label>
+            <textarea id="pack" name="pack" required></textarea><br>
+
+            <label for="extras">Extra expense:</label>
+            <input type="text" id="extras" name="extras" required><br>
+
+            <label for="ext">Extras Bought:</label>
+            <textarea id="ext" name="ext" required></textarea><br>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Svadishtam Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Svadishtam Management</h1>
+    <div class="container">
+        <div class="sidebar">
+            <h2> <a href="{{url_for('home')}}" style="text-decoration: none;color: white;"> Menu</a></h2>
+            <ul>
+                <li><a href="{{ url_for('sales') }}">Sales</a></li>
+                <li><a href="{{ url_for('expense') }}">Expense</a></li>
+                <li><a href="{{ url_for('profit') }}">Profits</a></li>
+                <li><a href="{{ url_for('employees') }}">Employees</a></li>
+                <li><a href="{{ url_for('customers') }}">Customers</a></li>
+                <li id="use">User: {{ username }}</li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <p>Welcome to the Svadishtam Management System, {{ username }}. Please select an option from the menu.</p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Svadishtam Management - Customers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2><a href="{{url_for('home')}}" style="text-decoration: none; color: white;">Menu</a></h2>
+        <ul>
+            <li><a href="{{ url_for('sales') }}">Sales</a></li>
+            <li><a href="{{ url_for('expense') }}">Expense</a></li>
+            <li><a href="{{ url_for('profit') }}">Profits</a></li>
+            <li><a href="{{ url_for('employees') }}">Employees</a></li>
+            <li><a href="{{ url_for('customers') }}">Customers</a></li>
+            <li id="use">User: {{ username }}</li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+    <div>
+        <button type="button" class="btn btn-success add-btn" style="margin-left: 90%; margin-top: 40px; margin-bottom: 40px;" data-bs-toggle="modal" data-bs-target="#addModal">Add Customer</button>
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLabel">Add Customer</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addForm" action="/add_customer" method="post">
+                            <label for="name">Name:</label>
+                            <input type="text" id="addname" name="name"><br><br>
+                            <label for="email">Email:</label>
+                            <input type="email" id="addemail" name="email"><br><br>
+                            <label for="mobile">Mobile:</label>
+                            <input type="text" id="addmobile" name="mobile"><br><br>
+                            <label for="address">Address:</label>
+                            <input type="text" id="addaddress" name="address"><br><br>
+                            <label for="birthdate">Birthdate:</label>
+                            <input type="date" id="addbirthdate" name="birthdate"><br><br>
+                            <label for="anniversary">Anniversary:</label>
+                            <input type="date" id="addanniversary" name="anniversary"><br><br>
+                            <button type="submit" id="addbut" class="btn btn-primary">Add Customer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div id="custtab" class="cust">
+        <table class="table" style="margin-left: 250px; width: 1100px;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Address</th>
+                    <th>Birthdate</th>
+                    <th>Anniversary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
+                    <td><button type="button" class="btn btn-primary edit-btn" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm" method="post" action="/edit_customer">
+                        <input type="hidden" id="customer_id" name="customer_id">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name"><br><br>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email"><br><br>
+                        <label for="mobile">Mobile:</label>
+                        <input type="text" id="mobile" name="mobile"><br><br>
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address"><br><br>
+                        <label for="birthdate">Birthdate:</label>
+                        <input type="date" id="birthdate" name="birthdate"><br><br>
+                        <label for="anniversary">Anniversary:</label>
+                        <input type="date" id="anniversary" name="anniversary"><br><br>
+                        <button type="submit" id="save" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var editModal = document.getElementById('editModal');
+        var editForm = document.getElementById('editForm');
+        var editBtns = document.getElementsByClassName('edit-btn');
+    
+        for (var i = 0; i < editBtns.length; i++) {
+            editBtns[i].addEventListener('click', function(event) {
+                var button = event.target;
+                var row = button.closest('tr');
+                var cells = row.getElementsByTagName('td');
+                
+                document.getElementById('customer_id').value = cells[0].innerText;
+                document.getElementById('name').value = cells[1].innerText;
+                document.getElementById('email').value = cells[2].innerText;
+                document.getElementById('mobile').value = cells[3].innerText;
+                document.getElementById('address').value = cells[4].innerText;
+                document.getElementById('birthdate').value = cells[5].innerText;
+                document.getElementById('anniversary').value = cells[6].innerText;
+    
+                var bootstrapModal = new bootstrap.Modal(editModal);
+                bootstrapModal.show();
+            });
+        }
+    
+        editModal.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+            var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+            for (var i = 0; i < modalBackdrops.length; i++) {
+                modalBackdrops[i].parentNode.removeChild(modalBackdrops[i]);
+            }
+        });
+    </script>
+</body>
+
+</html>
